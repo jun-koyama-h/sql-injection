@@ -7,8 +7,22 @@ services:
       - "80:80"
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - juice-shop-network
   juice-shop:
     image: bkimminich/juice-shop:latest
     container_name: juice-shop
     ports:
       - "3000:3000"
+    networks:
+      - juice-shop-network
+  kali:
+    image: kalilinux/kali-rolling:latest
+    container_name: kali
+    tty: true
+    networks:
+      - juice-shop-network
+
+networks:
+  juice-shop-network:
+    driver: bridge
