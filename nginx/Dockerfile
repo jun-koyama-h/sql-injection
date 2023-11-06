@@ -10,17 +10,15 @@ RUN apt-get update \
     pkgconf wget zlib1g-dev
 
 WORKDIR /root
-RUN git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity
-RUN cd ModSecurity && git submodule init && git submodule update
+RUN git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity \
+  && cd ModSecurity && git submodule init && git submodule update
 WORKDIR /root/ModSecurity
-RUN ./build.sh
-RUN ./configure
-RUN make && make install
+RUN ./build.sh && ./configure && make && make install
 
 # ngx_http_modsecurity_module
-RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git
-RUN wget http://nginx.org/download/nginx-1.25.3.tar.gz
-RUN tar zxvf nginx-1.25.3.tar.gz
+RUN git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git \
+  && wget http://nginx.org/download/nginx-1.25.3.tar.gz \
+  && tar zxvf nginx-1.25.3.tar.gz
 WORKDIR /root/ModSecurity/nginx-1.25.3
 RUN ./configure --with-compat --add-dynamic-module=../ModSecurity-nginx && make modules \
   && cp /root/ModSecurity/nginx-1.25.3/objs/ngx_http_modsecurity_module.so /etc/nginx/modules
@@ -34,14 +32,12 @@ RUN mkdir -p /etc/nginx/modsecurity \
 COPY conf.d/main.conf /etc/nginx/modsecurity
 COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY conf.d/ruleset.conf /etc/nginx/modsecurity/ruleset.conf
-RUN cp /root/ModSecurity/unicode.mapping /etc/nginx/modsecurity
-
-
-RUN curl -OL https://github.com/coreruleset/coreruleset/archive/v3.3.0.tar.gz && \
-    tar -xvzf v3.3.0.tar.gz && \
-    mv coreruleset-3.3.0 coreruleset && \
-    mv coreruleset /usr/local && \
-    cp /usr/local/coreruleset/crs-setup.conf.example \ 
+RUN cp /root/ModSecurity/unicode.mapping /etc/nginx/modsecurity \
+  && curl -OL https://github.com/coreruleset/coreruleset/archive/v3.3.0.tar.gz \
+    && tar -xvzf v3.3.0.tar.gz \
+    && mv coreruleset-3.3.0 coreruleset \
+    && mv coreruleset /usr/local \
+    && cp /usr/local/coreruleset/crs-setup.conf.example \ 
        /usr/local/coreruleset/crs-setup.conf
 
 # Expose port 80
