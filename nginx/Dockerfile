@@ -27,8 +27,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # SecRuleEngine
 RUN mkdir -p /etc/nginx/modsecurity \
   && cp /root/ModSecurity/modsecurity.conf-recommended /etc/nginx/modsecurity/modsecurity.conf \
-  && sed -i -e "s/SecRuleEngine DetectionOnly/SecRuleEngine On/g" /etc/nginx/modsecurity/modsecurity.conf \
-  && ln -s /dev/stdout /var/log/modsec_audit.log
+  && sed -i -e "s/SecRuleEngine DetectionOnly/SecRuleEngine On/g" /etc/nginx/modsecurity/modsecurity.conf
 COPY conf.d/main.conf /etc/nginx/modsecurity
 COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY conf.d/ruleset.conf /etc/nginx/modsecurity/ruleset.conf
