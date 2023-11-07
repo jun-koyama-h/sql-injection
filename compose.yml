@@ -2,6 +2,7 @@ version: "3"
 services:
   nginx:
     image: nginx:1.25.3
+    # build: nginx
     container_name: nginx
     ports:
       - "80:80"
@@ -22,7 +23,6 @@ services:
     tty: true
     networks:
       - juice-shop-network
-
 networks:
   juice-shop-network:
     driver: bridge
