@@ -1,7 +1,7 @@
 version: "3"
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.25.3
     container_name: nginx
     ports:
       - "80:80"
@@ -17,7 +17,7 @@ services:
     networks:
       - juice-shop-network
   kali:
-    image: kalilinux/kali-rolling:latest
+    build: kali
     container_name: kali
     tty: true
     networks:
